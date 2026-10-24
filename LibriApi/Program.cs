@@ -48,7 +48,15 @@ builder.Services
     });
 
 builder.Services.AddAuthorization();
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Frontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 var app = builder.Build();
 
 app.UseExceptionHandler();              
@@ -68,6 +76,12 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
+
+app.UseCors("Frontend");
+
+app.UseAuthentication();
+
+app.UseAuthorization();
 
 app.UseAuthorization();
 
